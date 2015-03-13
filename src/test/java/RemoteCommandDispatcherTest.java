@@ -42,5 +42,34 @@ public class RemoteCommandDispatcherTest {
         assertArrayEquals(new int[] {2, 1}, called);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddSameCommandTwice() {
+        RemoteCommandDispatcher instance = new RemoteCommandDispatcher();
+
+        instance.addCommand(new RemoteCommand() {
+            @Override
+            public void onCommand() {
+
+            }
+
+            @Override
+            public String getCommand() {
+                return "foo";
+            }
+        });
+
+        instance.addCommand(new RemoteCommand() {
+            @Override
+            public void onCommand() {
+
+            }
+
+            @Override
+            public String getCommand() {
+                return "foo";
+            }
+        });
+    }
+
 
 }

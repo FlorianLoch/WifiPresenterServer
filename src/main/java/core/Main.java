@@ -2,6 +2,8 @@ package core;
 
 import core.commands.LeftKeyPressCommand;
 import core.commands.RightKeyPressCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import socket.Connection;
 import socket.ServerSocketListener;
 
@@ -14,6 +16,7 @@ import java.io.InputStream;
  * Created by florian on 12.03.15.
  */
 public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static final int PORT = 5555;
     private static final String PASSPHRASE = "TOP_SECRET";
 
@@ -32,7 +35,8 @@ public class Main {
         try {
             new Main();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Could not instantiate main application. Execution aborted!", e);
+            System.exit(0);
         }
     }
 
@@ -63,6 +67,7 @@ public class Main {
             @Override
             public void onConnect(Connection conn) {
                 conn.setListener(commandDispatcher);
+                conn.start();
             }
         });
         this.server.startListeningForConnection();

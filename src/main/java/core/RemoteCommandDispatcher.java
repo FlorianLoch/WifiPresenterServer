@@ -1,32 +1,42 @@
 package core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import socket.ConnectionListener;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by florian on 13.03.15.
  */
 public class RemoteCommandDispatcher implements ConnectionListener {
-    private ArrayList<RemoteCommand> commands;
+    private static final Logger log = LoggerFactory.getLogger(RemoteCommandDispatcher.class);
+    private HashMap<String, RemoteCommand> commands;
 
     public RemoteCommandDispatcher() {
-        this.commands = new ArrayList<>();
+        this.commands = new HashMap<>();
     }
 
     public void addCommand(RemoteCommand cmd) {
-        this.commands.add(cmd);
+        if (this.commands.containsKey(cmd)) {
+            throw new IllegalArgumentException("Command is already registered!");
+        }
+
+        this.commands.put(cmd.getCommand().toLowerCase(), cmd);
     }
 
     public void dispatchEvent(String command) {
         command = command.toLowerCase();
 
-        for (RemoteCommand cmd : this.commands) {
-            if (cmd.getCommand().toLowerCase().equals(command)) {
-                cmd.onCommand();
-                return;
-            }
+        RemoteCommand found = this.commands.get(command);
+
+        if (null != found) {
+            log.debug("Dispatching command '" + command + "'");
+            found.onCommand();
+            return;
         }
+
+        log.debug("Could not dispatch command '" + command + "'");
     }
 
     @Override
