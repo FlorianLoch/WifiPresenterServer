@@ -14,7 +14,6 @@ import java.io.IOException;
 public class Server implements ServerSocketListener {
     private static final Logger log = LoggerFactory.getLogger(Server.class);
 
-    private static final String PASSPHRASE = "TOP_SECRET";
     private ServerSocketWrapper socket;
     private ServerSocketListener listener;
 

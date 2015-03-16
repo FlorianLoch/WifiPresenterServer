@@ -49,7 +49,15 @@ public class ServerSocketWrapper implements Runnable {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-                if (shakeHands(in, out)) {
+                boolean handshakeSuccessful = false;
+                try {
+                    handshakeSuccessful = shakeHands(in, out);
+                }
+                catch (Exception ex) {
+                    log.debug("Error caught during handshaking!", ex);
+                }
+
+                if (handshakeSuccessful) {
                     this.fireOnHandshakeSuccessful();
 
                     out.println("HS successful");
@@ -58,7 +66,7 @@ public class ServerSocketWrapper implements Runnable {
                     Connection conn = new Connection(in, out, socket);
                     this.fireOnConnected(conn);
 
-                    return;
+                    break;
                 }
 
                 this.fireOnHandshakeFailed();
@@ -68,11 +76,12 @@ public class ServerSocketWrapper implements Runnable {
                 out.close();
                 socket.close();
             }
+
             log.debug("Shutdown server socket; stopped listening");
 
             this.fireOnClosed();
 
-            this.s.close();
+            //this.s.close();
         }
         catch (Exception e) {
             this.fireOnError(e);

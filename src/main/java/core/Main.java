@@ -5,6 +5,7 @@ import core.commands.RightKeyPressCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import socket.Connection;
+import socket.ConnectionListener;
 import socket.ServerSocketListener;
 
 import javax.imageio.ImageIO;
@@ -17,7 +18,7 @@ import java.io.InputStream;
  */
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
-    private static final int PORT = 5555;
+    private static final int PORT = 8081;
     private static final String PASSPHRASE = "TOP_SECRET";
 
     private static final RemoteCommandDispatcher commandDispatcher;
@@ -66,7 +67,18 @@ public class Main {
 
             @Override
             public void onConnect(Connection conn) {
-                conn.setListener(commandDispatcher);
+                conn.setListener(new ConnectionListener() {
+                    @Override
+                    public void onMessage(String msg) {
+                        commandDispatcher.onMessage(msg);
+                    }
+
+                    @Override
+                    public void onDisconnect() {
+                        //Restart ServerSocket
+                        server.startListeningForConnection();
+                    }
+                });
                 conn.start();
             }
         });
@@ -79,6 +91,10 @@ public class Main {
 
         this.trayIcon = new TrayIcon(imageForTrayIcon);
         this.trayIcon.setImageAutoSize(true);
+
+        PopupMenu pMenu = new PopupMenu();
+
+        this.trayIcon.setPopupMenu(pMenu);
 
         SystemTray.getSystemTray().add(this.trayIcon);
     }
