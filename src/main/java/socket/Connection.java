@@ -51,12 +51,11 @@ public class Connection extends Thread {
 
                 if (input == null) {
                     this.socket.close();
-                    continue;
+                    break;
                 }
 
                 this.fireOnMessage(input);
             }
-            this.fireOnDisconnect();
         } catch (Exception e) {
             this.fireOnError(e);
         } finally {
