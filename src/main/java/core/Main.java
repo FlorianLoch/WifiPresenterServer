@@ -4,6 +4,7 @@ import core.commands.LeftKeyPressCommand;
 import core.commands.RightKeyPressCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import serviceDiscovery.ServiceDiscovery;
 import socket.Connection;
 import socket.ConnectionListener;
 import socket.ServerSocketListener;
@@ -31,6 +32,7 @@ public class Main {
 
     private TrayIcon trayIcon;
     private Server server;
+    private ServiceDiscovery serviceDiscovery;
 
     public static void main(String[] args) {
         try {
@@ -44,7 +46,8 @@ public class Main {
     public Main() throws IOException, AWTException {
         this.initTrayIcon();
         this.initServer();
-
+        this.serviceDiscovery = new ServiceDiscovery();
+        this.serviceDiscovery.makeDiscoverable(PORT);
     }
 
     private void initServer() throws IOException {
