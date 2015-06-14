@@ -18,7 +18,7 @@ public class RemoteCommandDispatcher implements ConnectionListener {
     }
 
     public void addCommand(RemoteCommand cmd) {
-        if (this.commands.containsKey(cmd)) {
+        if (this.commands.containsKey(cmd.getCommand().toLowerCase())) {
             throw new IllegalArgumentException("Command is already registered!");
         }
 
