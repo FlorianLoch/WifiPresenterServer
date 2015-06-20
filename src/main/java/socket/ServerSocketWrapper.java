@@ -60,7 +60,7 @@ public class ServerSocketWrapper implements Runnable {
                 if (handshakeSuccessful) {
                     this.fireOnHandshakeSuccessful();
 
-                    out.println("HS successful");
+                    out.println("hs successful");
                     out.flush();
 
                     Connection conn = new Connection(in, out, socket);
@@ -70,7 +70,7 @@ public class ServerSocketWrapper implements Runnable {
                 }
 
                 this.fireOnHandshakeFailed();
-                out.println("HS failed");
+                out.println("hs failed");
                 out.flush();
                 in.close();
                 out.close();
@@ -96,7 +96,7 @@ public class ServerSocketWrapper implements Runnable {
         log.debug("Generated nonce: " + nonce);
         log.debug("Passphrase is: " + this.passphrase);
 
-        out.println(nonce);
+        out.println("hello" + nonce);
         out.flush();
 
         String answer = in.readLine();
