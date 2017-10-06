@@ -19,7 +19,6 @@ public class ServerSocketWrapper implements Runnable {
     private ServerSocket s;
     private ServerSocketListener listener;
     private final String passphrase;
-    private boolean stop;
 
     public ServerSocketWrapper(int port, String passphrase) throws IOException {
         this(new ServerSocket(port), passphrase);
@@ -28,7 +27,6 @@ public class ServerSocketWrapper implements Runnable {
     public ServerSocketWrapper(ServerSocket socket, String passphrase) {
         this.s = socket;
         this.passphrase = passphrase;
-        this.stop = false;
     }
 
     public void setListener(ServerSocketListener l) {
@@ -38,7 +36,7 @@ public class ServerSocketWrapper implements Runnable {
     @Override
     public void run() {
         try {
-            while (!stop) {
+            while (true) {
                 log.debug("Start listening on port " + this.s.getLocalPort() + " on interface " + this.s.getLocalSocketAddress());
                 Socket socket = this.s.accept();
 
@@ -114,6 +112,7 @@ public class ServerSocketWrapper implements Runnable {
     }
 
     private static String generateNonce() {
+        // TODO Fix this!
         return "SECRET";
     }
 

@@ -2,6 +2,7 @@ package core;
 
 import core.commands.LeftKeyPressCommand;
 import core.commands.RightKeyPressCommand;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import serviceDiscovery.ServiceDiscovery;
@@ -11,6 +12,8 @@ import socket.ServerSocketListener;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -96,6 +99,22 @@ public class Main {
         this.trayIcon.setImageAutoSize(true);
 
         PopupMenu pMenu = new PopupMenu();
+        MenuItem mI_enterPairingMode = new MenuItem("Enter pairing mode");
+        mI_enterPairingMode.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Main.this.server.startListeningForConnection();
+            }
+        });
+
+        MenuItem mI_quit = new MenuItem("Quit");
+        mI_quit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        pMenu.add(mI_enterPairingMode);
+        pMenu.add(mI_quit);
 
         this.trayIcon.setPopupMenu(pMenu);
 
