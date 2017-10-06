@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by florian on 12.03.15.
@@ -112,8 +113,7 @@ public class ServerSocketWrapper implements Runnable {
     }
 
     private static String generateNonce() {
-        // TODO Fix this!
-        return "SECRET";
+        return Long.toHexString(ThreadLocalRandom.current().nextLong());
     }
 
     private void fireOnError(Exception e) {
