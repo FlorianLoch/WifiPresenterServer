@@ -23,7 +23,7 @@ import java.io.InputStream;
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static final int PORT = 8081;
-    private static final String PASSPHRASE = "TOP_SECRET";
+    private static final String DEFAULT_PASSPHRASE = "TOP_SECRET";
 
     private static final RemoteCommandDispatcher commandDispatcher;
 
@@ -36,25 +36,40 @@ public class Main {
     private TrayIcon trayIcon;
     private Server server;
     private ServiceDiscovery serviceDiscovery;
+    private final String passphrase;
 
     public static void main(String[] args) {
         try {
-            new Main();
+            String passphrase = DEFAULT_PASSPHRASE;
+            if (args.length == 1) {
+                passphrase = args[0];
+            }
+            new Main(passphrase);
         } catch (Exception e) {
             log.error("Could not instantiate main application. Execution aborted!", e);
             System.exit(0);
         }
     }
 
-    public Main() throws IOException, AWTException {
+    public Main(String passphrase) throws IOException, AWTException {
+        this.passphrase = passphrase;
+        this.checkSystemLineSeparator();
+
         this.initTrayIcon();
         this.initServer();
         this.serviceDiscovery = new ServiceDiscovery();
         this.serviceDiscovery.makeDiscoverable(PORT);
     }
 
+    private void checkSystemLineSeparator() {
+        if (!System.getProperty("line.separator").equals("\n")) {
+            log.error("line.separator on your system differs from '\\n', please run the application with \"-Dline.separator=$'\n'\" as parameter!");
+            System.exit(1);
+        }
+    }
+
     private void initServer() throws IOException {
-        this.server = new Server(PORT, PASSPHRASE);
+        this.server = new Server(PORT, this.passphrase);
         this.server.setListener(new ServerSocketListener() {
             @Override
             public void onHandshakeSuccessful() {

@@ -95,7 +95,7 @@ public class ServerSocketWrapper implements Runnable {
         log.debug("Generated nonce: " + nonce);
         log.debug("Passphrase is: " + this.passphrase);
 
-        out.println("hello" + nonce);
+        out.print("hello" + nonce + "\n");
         out.flush();
 
         String answer = in.readLine();
