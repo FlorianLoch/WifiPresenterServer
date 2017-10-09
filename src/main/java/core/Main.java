@@ -44,6 +44,12 @@ public class Main {
             if (args.length == 1) {
                 passphrase = args[0];
             }
+            else {
+                System.out.println("<==========================================================>");
+                System.out.println("You can set a custom password by providing it as a cli parameter to the server!");
+                System.out.println("Otherwise the default password \"" + DEFAULT_PASSPHRASE + "\" will be used!");
+                System.out.println("<==========================================================>");
+            }
             new Main(passphrase);
         } catch (Exception e) {
             log.error("Could not instantiate main application. Execution aborted!", e);
